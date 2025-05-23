@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #1E3A8A; /* Deep Ocean Blue */
+  --secondary: #F0595C; /* Coral Sunset */
+  --accent: #5EEAD4; /* Seafoam Green */
+  --neutral-light: #F5F5F5; /* Off-White Sand */
+  --neutral-gray: #6B7280; /* Soft Gray Stone */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  @apply bg-neutral-light font-sans text-neutral-gray;
+}
+
+.container {
+  @apply max-w-7xl mx-auto;
+}
+
+.glassmorphism {
+  @apply bg-[var(--glass-bg)] backdrop-blur-md border border-white/20 rounded-lg shadow-lg;
+}
+
+.gradient-button {
+  @apply bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] text-white rounded-lg hover:from-[var(--secondary)] hover:to-[var(--primary)] transition-all;
+}
