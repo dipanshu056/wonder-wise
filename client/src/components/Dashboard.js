@@ -6,18 +6,29 @@ import { getTrips, deleteTrip } from '../api';
 function Dashboard() {
   const { user, logout } = useContext(AuthContext);
   const [trips, setTrips] = useState([]);
+  const [filteredTrips, setFilteredTrips] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchTrips = async () => {
       try {
         const response = await getTrips();
         setTrips(response.data);
+        setFilteredTrips(response.data);
       } catch (error) {
         console.error('Error fetching trips:', error);
       }
     };
     if (user) fetchTrips();
   }, [user]);
+
+  useEffect(() => {
+    setFilteredTrips(
+      trips.filter((trip) =>
+        trip.destination.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, trips]);
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this trip?')) {
@@ -28,6 +39,10 @@ function Dashboard() {
         console.error('Error deleting trip:', error);
       }
     }
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -46,11 +61,22 @@ function Dashboard() {
       {user ? (
         <>
           <h3 className="text-xl font-semibold mb-4 text-primary">Your Trips</h3>
-          {trips.length === 0 ? (
-            <p className="text-neutral-gray">No trips yet. Create one!</p>
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search trips by destination..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="w-full p-2 border rounded border-neutral-gray bg-neutral-light text-neutral-gray focus:ring-accent focus:border-accent"
+            />
+          </div>
+          {filteredTrips.length === 0 ? (
+            <p className="text-neutral-gray">
+              {searchTerm ? 'No trips match your search.' : 'No trips yet. Create one!'}
+            </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {trips.map((trip) => (
+              {filteredTrips.map((trip) => (
                 <div key={trip.id} className="p-4 border border-neutral-gray rounded-lg bg-neutral-light">
                   <h4 className="text-lg font-bold text-primary">{trip.destination}</h4>
                   <p className="text-neutral-gray">Start: {trip.startDate}</p>
