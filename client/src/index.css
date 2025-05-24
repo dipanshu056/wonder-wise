@@ -13,6 +13,8 @@
 
 body {
   @apply bg-neutral-light font-sans text-neutral-gray;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  position: relative;
 }
 
 .container {
